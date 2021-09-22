@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "headers/funciones.h"
 #include "headers/list.h"
 
@@ -102,6 +103,9 @@ void agregarProducto(Map* productos, Map* productosPorMarca, Map* productosPorTi
 
         while (auxProducto != NULL) {
             if (strcmp(auxProducto->marca, marca) == 0) {
+                if (isdigit(*cantidad)) 
+                    auxProducto->stock = auxProducto->stock + atoi(cantidad);
+
                 encontrado = 1;
                 break;
             }
@@ -168,4 +172,35 @@ void buscarPorCriterio(Map* criterio, char* key) {
         cont++;
         auxProducto = next(criterioList);
     }
+}
+
+void anadirProducto(Map* productos,Map* productosPorMarca,Map* productosPorTipo)
+{
+    char nombre[256];
+    char marca[256];
+    char tipo[256];
+    char cantidad[10];
+    char precio[10];
+
+    printf("Ingrese el nombre del producto: \n");
+    fgets(nombre, sizeof(nombre), stdin);
+    strtok(nombre, "\n");
+
+    printf("Ingrese la marca del producto: \n");
+    fgets(marca, sizeof(marca), stdin);
+    strtok(marca, "\n");
+
+    printf("Ingrese el tipo del producto: \n");
+    fgets(tipo, sizeof(tipo), stdin);
+    strtok(tipo, "\n");
+
+    printf("Ingrese el stock del producto: \n");
+    fgets(cantidad, sizeof(cantidad), stdin);
+    strtok(cantidad, "\n");
+
+    printf("Ingrese el precio del producto: \n");
+    fgets(precio, sizeof(precio), stdin);
+    strtok(precio, "\n");
+
+    agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
 }

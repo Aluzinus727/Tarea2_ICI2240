@@ -54,6 +54,7 @@ void initMenu() {
     setSortFunction(productosPorTipo, lower_than_string);
     
     int choice;
+    char buscar[128];
 
     while(choice != 0) {
         printf(" ---------------------------------------------------------------------- \n");
@@ -82,15 +83,28 @@ void initMenu() {
             case 2:
                 break;
             case 3:
+                anadirProducto(productos, productosPorMarca, productosPorTipo);
                 break;
             case 4:
-                buscarPorCriterio(productosPorTipo, "aseo");
+                printf("Ingrese el tipo de producto que desea buscar\n");
+                fgets(buscar, sizeof(buscar), stdin);
+                strtok(buscar, "\n");
+
+                buscarPorCriterio(productosPorTipo, buscar);
                 break;
             case 5:
-                buscarPorCriterio(productosPorMarca, "ballerina");
+                printf("Ingrese la marca que desea buscar\n");
+                fgets(buscar, sizeof(buscar), stdin);
+                strtok(buscar, "\n");
+
+                buscarPorCriterio(productosPorMarca, buscar);
                 break;
             case 6:
-                buscarPorCriterio(productos, "shampoo 1 L");
+                printf("Ingrese el nombre del producto que desea buscar (REVISAR LA BUSQUEDA POR NOMBRE DE PRODUCTO)\n");
+                fgets(buscar, sizeof(buscar), stdin);
+                strtok(buscar, "\n");
+
+                buscarPorCriterio(productos, buscar);
                 break;
             case 7:
                 break;
@@ -114,6 +128,7 @@ int getChoice() {
 
     while(validInput == 0) {
         scanf("%2s", inputChoice);
+        fflush(stdin);
     
         if(isdigit(*inputChoice)){
             return atoi(inputChoice);
