@@ -107,12 +107,12 @@ void initMenu() {
                 buscarPorCriterio(productos, buscar);
                 break;
             case 7:
+                printf("Mostrando todos los productos\n");
+                mostrarProductos(productos);
                 break;
             case 8:
                 break;
             case 9: 
-                break;
-            case 10:
                 break;
         }
     };  

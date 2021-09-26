@@ -204,3 +204,17 @@ void anadirProducto(Map* productos,Map* productosPorMarca,Map* productosPorTipo)
 
     agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
 }
+
+void mostrarProductos(Map* productos)
+{
+    List* auxLista = firstMap(productos);
+    Producto* auxProducto = first(auxLista);
+    int cont = 1;
+    while (nextMap(productos) != NULL) {
+        printf("%d. %s, %s, %s, %d, %d\n", cont, auxProducto->nombre, auxProducto->marca, auxProducto->tipo, auxProducto->stock, auxProducto->precio);
+
+        cont++;
+        auxLista = nextMap(productos);
+        auxProducto = first(auxLista);
+    }
+}
