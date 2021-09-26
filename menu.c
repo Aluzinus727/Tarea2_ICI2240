@@ -48,6 +48,11 @@ void initMenu() {
                 importarProductos(productos, productosPorMarca, productosPorTipo, archivo);
                 break;
             case 2:
+                printf("Ingrese el nombre del archivo a exportar (agregue .csv al final del nombre)\n");
+                fgets(archivo, sizeof(archivo), stdin);
+                strtok(archivo, "\n");
+
+                exportarProductos(productos, archivo);
                 break;
             case 3:
                 anadirProducto(productos, productosPorMarca, productosPorTipo);

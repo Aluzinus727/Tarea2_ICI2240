@@ -37,3 +37,5 @@ void mostrarProductos(HashMap* productos);
 void* crearCarrito(char* nombreCarrito);
 
 void agregarAlCarrito(HashMap* carritos, HashMap* productos, char* nombre, char* marca, int cantidad, char* nombreCarrito);
+
+void exportarProductos(HashMap* productos, char* archivo);

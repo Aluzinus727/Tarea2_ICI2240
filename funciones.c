@@ -270,3 +270,28 @@ void agregarAlCarrito(HashMap* carritos, HashMap* productos, char* nombre, char*
     if (encontrado == 0) 
         printf("No existe ningun producto con el nombre especificado");
 }
+
+void exportarProductos(HashMap* productos, char* archivo)
+{
+    FILE *datos;
+    char aux[1024];
+    datos = fopen(archivo, "w");
+    Pair* productoPair = firstMap(productos);
+
+    while (productoPair != NULL) {
+        List* productosList = productoPair->value;
+        Producto* auxProducto = first(productosList);
+
+        while (auxProducto != NULL) {
+            snprintf(aux, sizeof(aux), "%s, %s, %s, %d, %d\n", auxProducto->nombre, auxProducto->marca, auxProducto->tipo, auxProducto->stock, auxProducto->precio);
+            fputs(aux, datos);
+            auxProducto = next(productosList);
+        }
+
+        productoPair = nextMap(productos);
+    }
+    printf("Exportacion exitosa!\n");
+    fclose(datos);
+
+
+}
