@@ -5,53 +5,53 @@
 
 #include "headers/menu.h"
 #include "headers/funciones.h"
-#include "headers/map.h"
+#include "headers/hashmap.h"
 
 
 /*
   función para comparar claves de tipo string
   retorna 1 si son iguales
-*/
+
 int is_equal_string(void * key1, void * key2) {
     if(strcmp((char*)key1, (char*)key2)==0) return 1;
     return 0;
 }
 
-/*
+
   función para comparar claves de tipo string
   retorna 1 si son key1<key2
-*/
+
 int lower_than_string(void * key1, void * key2) {
     if(strcmp((char*)key1, (char*)key2) < 0) return 1;
     return 0;
 }
 
-/*
+
   función para comparar claves de tipo int
   retorna 1 si son iguales
-*/
+
 int is_equal_int(void * key1, void * key2) {
     if(*(int*)key1 == *(int*)key2) return 1;
     return 0;
 }
 
-/*
+
   función para comparar claves de tipo int
   retorna 1 si son key1<key2
-*/
+
 int lower_than_int(void * key1, void * key2) {
     if(*(int*)key1 < *(int*)key2) return 1;
     return 0;
-}
+}*/
 
 void initMenu() {
-    Map* productos = createMap(is_equal_string);
-    Map* productosPorMarca = createMap(is_equal_string);
-    Map* productosPorTipo = createMap(is_equal_string);
+    HashMap* productos = createMap(100);
+    HashMap* productosPorMarca = createMap(100);
+    HashMap* productosPorTipo = createMap(100);
     // Cola para el carrito
-    setSortFunction(productos, lower_than_string);
-    setSortFunction(productosPorMarca, lower_than_string);
-    setSortFunction(productosPorTipo, lower_than_string);
+    // setSortFunction(productos, lower_than_string);
+    // setSortFunction(productosPorMarca, lower_than_string);
+    // setSortFunction(productosPorTipo, lower_than_string);
     
     int choice;
     char buscar[128];

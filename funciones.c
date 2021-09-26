@@ -19,7 +19,7 @@ struct Carrito {
     int total;
 };
 
-void importarProductos(Map* productos, Map* productosPorMarca, Map* productosPorTipo, char* nombreArchivo) {
+void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombreArchivo) {
     {
     // Se abre el archivo de mundos csv en modo lectura "r"
     FILE *fp = fopen ("Archivo_100productos.csv", "r");
@@ -89,17 +89,18 @@ char *get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void agregarProducto(Map* productos, Map* productosPorMarca, Map* productosPorTipo, char* nombre, char* marca, char* tipo, char* cantidad, char* precio) {
-    List* productosList = searchMap(productos, nombre);
+void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombre, char* marca, char* tipo, char* cantidad, char* precio) {
+    Pair* productosPair = searchMap(productos, nombre);
+    List* productosList = NULL;
     Producto* auxProducto = NULL;
     int encontrado = 0;
 
-    if (productosList == NULL) {
+    if (productosPair == NULL) {
         productosList = create_list();
         insertMap(productos, nombre, productosList);
     }
     else {
-        auxProducto = first(productosList);
+        auxProducto = first(productosPair->value);
 
         while (auxProducto != NULL) {
             if (strcmp(auxProducto->marca, marca) == 0) {
@@ -110,23 +111,26 @@ void agregarProducto(Map* productos, Map* productosPorMarca, Map* productosPorTi
                 break;
             }
 
-            auxProducto = next(productosList);
+            auxProducto = next(productosPair->value);
         };
     }
 
     if (!encontrado) {
         auxProducto = crearProducto(nombre, marca, tipo, cantidad, precio);
+        List* marcasList = NULL;
+        List* tiposList = NULL;
 
-        List* marcasList = searchMap(productosPorMarca, marca);
+        Pair* marcasPair = searchMap(productosPorMarca, marca);
 
-        if (marcasList == NULL) {
+        if (marcasPair == NULL) {
             marcasList = create_list();
             insertMap(productosPorMarca, marca, marcasList);
+            
         }
 
-        List* tiposList = searchMap(productosPorTipo, tipo);
+        Pair* tiposPair = searchMap(productosPorTipo, tipo);
 
-        if (tiposList == NULL) {
+        if (tiposPair == NULL) {
             tiposList = create_list();
             insertMap(productosPorTipo, tipo, tiposList);
         }
@@ -155,26 +159,26 @@ void* crearProducto(char* nombre, char* marca, char* tipo, char* stock, char* pr
     return producto;    
 }
 
-void buscarPorCriterio(Map* criterio, char* key) {
-    List* criterioList = searchMap(criterio, key);
+void buscarPorCriterio(HashMap* criterio, char* key) {
+    Pair* criterioPair = searchMap(criterio, key);
 
-    if (criterioList == NULL) {
+    if (criterioPair == NULL) {
         printf("No se pudo encontrar ningun producto con el filtro especificado.\n");
         return;
     }
     
-    Producto* auxProducto = first(criterioList);
+    Producto* auxProducto = first(criterioPair->value);
     int cont = 1;
 
     while (auxProducto != NULL) {
         printf("%d. %s, %s, %s, %d, %d\n", cont, auxProducto->nombre, auxProducto->marca, auxProducto->tipo, auxProducto->stock, auxProducto->precio);
 
         cont++;
-        auxProducto = next(criterioList);
+        auxProducto = next(criterioPair->value);
     }
 }
 
-void anadirProducto(Map* productos,Map* productosPorMarca,Map* productosPorTipo)
+void anadirProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo)
 {
     char nombre[256];
     char marca[256];
@@ -205,16 +209,23 @@ void anadirProducto(Map* productos,Map* productosPorMarca,Map* productosPorTipo)
     agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
 }
 
-void mostrarProductos(Map* productos)
+void mostrarProductos(HashMap* productos)
 {
-    List* auxLista = firstMap(productos);
-    Producto* auxProducto = first(auxLista);
+    Pair* productoPair = firstMap(productos);
+    // Producto* auxProducto = firstMap(productos);
     int cont = 1;
-    while (nextMap(productos) != NULL) {
-        printf("%d. %s, %s, %s, %d, %d\n", cont, auxProducto->nombre, auxProducto->marca, auxProducto->tipo, auxProducto->stock, auxProducto->precio);
 
-        cont++;
-        auxLista = nextMap(productos);
-        auxProducto = first(auxLista);
+    while (productos != NULL) {
+        List* productosList = productoPair->value;
+        Producto* auxProducto = first(productosList);
+
+        while (auxProducto != NULL) {
+            printf("%d. %s, %s, %s, %d, %d\n", cont, auxProducto->nombre, auxProducto->marca, auxProducto->tipo, auxProducto->stock, auxProducto->precio);
+
+            cont++;
+            auxProducto = next(productosList);
+        }
+
+        productoPair = nextMap(productos);
     }
 }
