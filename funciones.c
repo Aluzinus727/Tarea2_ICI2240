@@ -32,7 +32,7 @@ void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* 
     char* cantidad;
     char* precio;
 
-    fgets (linea, 1023, fp);
+    // fgets (linea, 1023, fp);
     while (fgets (linea, 1023, fp) != NULL) { // Se lee la linea
         nombre = get_csv_field(linea, 0); // Se obtiene el nombre
         marca = get_csv_field(linea, 1);
@@ -91,8 +91,8 @@ char *get_csv_field (char * tmp, int k) {
 
 void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombre, char* marca, char* tipo, char* cantidad, char* precio) {
     Pair* productosPair = searchMap(productos, nombre);
-    List* productosList = NULL;
-    Producto* auxProducto = NULL;
+    List* productosList;
+    Producto* auxProducto;
     int encontrado = 0;
 
     if (productosPair == NULL) {
@@ -117,15 +117,16 @@ void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pr
 
     if (!encontrado) {
         auxProducto = crearProducto(nombre, marca, tipo, cantidad, precio);
-        List* marcasList = NULL;
-        List* tiposList = NULL;
-
         Pair* marcasPair = searchMap(productosPorMarca, marca);
+        
+        List* marcasList;
+        List* tiposList;
+
 
         if (marcasPair == NULL) {
             marcasList = create_list();
+            push_back(marcasList, auxProducto);
             insertMap(productosPorMarca, marca, marcasList);
-            
         }
 
         Pair* tiposPair = searchMap(productosPorTipo, tipo);
@@ -133,12 +134,10 @@ void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pr
         if (tiposPair == NULL) {
             tiposList = create_list();
             insertMap(productosPorTipo, tipo, tiposList);
+            push_back(tiposList, auxProducto);
         }
-        //printf("h %p %p %p %p\n", productosList, marcasList, tiposList, auxProducto);
 
         push_back(productosList, auxProducto);
-        push_back(marcasList, auxProducto);
-        push_back(tiposList, auxProducto);
     }
 }
 
@@ -212,10 +211,9 @@ void anadirProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pro
 void mostrarProductos(HashMap* productos)
 {
     Pair* productoPair = firstMap(productos);
-    // Producto* auxProducto = firstMap(productos);
     int cont = 1;
 
-    while (productos != NULL) {
+    while (productoPair != NULL) {
         List* productosList = productoPair->value;
         Producto* auxProducto = first(productosList);
 
