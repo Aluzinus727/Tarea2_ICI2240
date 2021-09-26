@@ -20,34 +20,33 @@ struct Carrito {
 };
 
 void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombreArchivo) {
-    {
-    // Se abre el archivo de mundos csv en modo lectura "r"
-    FILE *fp = fopen ("Archivo_100productos.csv", "r");
+    FILE *fp = fopen (nombreArchivo, "r");
+    
+    if (nombreArchivo) {
+        char linea[1024];
+        char* nombre;
+        char* marca;
+        char* tipo;
+        char* cantidad;
+        char* precio;
 
-    // Cadena para guardar la linea completa del archivo csv
-    char linea[1024];
-    char* nombre;
-    char* marca;
-    char* tipo;
-    char* cantidad;
-    char* precio;
+        while (fgets (linea, 1023, fp) != NULL) { 
+            nombre = get_csv_field(linea, 0); 
+            marca = get_csv_field(linea, 1);
+            tipo = get_csv_field(linea, 2);
+            cantidad = get_csv_field(linea, 3);
+            precio = get_csv_field(linea, 4);
 
-    // fgets (linea, 1023, fp);
-    while (fgets (linea, 1023, fp) != NULL) { // Se lee la linea
-        nombre = get_csv_field(linea, 0); // Se obtiene el nombre
-        marca = get_csv_field(linea, 1);
-        tipo = get_csv_field(linea, 2);
-        cantidad = get_csv_field(linea, 3);
-        precio = get_csv_field(linea, 4);
+            printf("%s %s %s %s %s\n", nombre, marca, tipo, cantidad, precio);
 
-        printf("%s %s %s %s %s\n", nombre, marca, tipo, cantidad, precio);
+            agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
+        }
 
-        agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
-    }
+    } else 
+        printf("No se pudo encontrar ningun archico con ese nombre");
 }
 
 
-}
 //Funcion para leer el k-esimo elemento de un string (separado por comas)
 char *get_csv_field (char * tmp, int k) {
     int open_mark = 0;
@@ -127,7 +126,8 @@ void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pr
             marcasList = create_list();
             push_back(marcasList, auxProducto);
             insertMap(productosPorMarca, marca, marcasList);
-        }
+        } else 
+            push_back(marcasPair->value, auxProducto);
 
         Pair* tiposPair = searchMap(productosPorTipo, tipo);
 
@@ -135,7 +135,8 @@ void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pr
             tiposList = create_list();
             insertMap(productosPorTipo, tipo, tiposList);
             push_back(tiposList, auxProducto);
-        }
+        } else
+            push_back(tiposPair->value, auxProducto);
 
         push_back(productosList, auxProducto);
     }
@@ -166,6 +167,7 @@ void buscarPorCriterio(HashMap* criterio, char* key) {
         return;
     }
     
+    printf("%d\n", size(criterioPair->value));
     Producto* auxProducto = first(criterioPair->value);
     int cont = 1;
 

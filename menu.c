@@ -17,6 +17,7 @@ void initMenu() {
     
     int choice;
     char buscar[128];
+    char archivo[128];
 
     while(choice != 0) {
         printf(" ---------------------------------------------------------------------- \n");
@@ -40,7 +41,11 @@ void initMenu() {
 
         switch (choice) {
             case 1:
-                importarProductos(productos, productosPorMarca, productosPorTipo, "Archivo_100productos.csv");
+                printf("Ingrese el nombre del archivo a importar\n");
+                fgets(archivo, sizeof(archivo), stdin);
+                strtok(archivo, "\n");
+
+                importarProductos(productos, productosPorMarca, productosPorTipo, archivo);
                 break;
             case 2:
                 break;
