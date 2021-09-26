@@ -8,50 +8,12 @@
 #include "headers/hashmap.h"
 
 
-/*
-  función para comparar claves de tipo string
-  retorna 1 si son iguales
-
-int is_equal_string(void * key1, void * key2) {
-    if(strcmp((char*)key1, (char*)key2)==0) return 1;
-    return 0;
-}
-
-
-  función para comparar claves de tipo string
-  retorna 1 si son key1<key2
-
-int lower_than_string(void * key1, void * key2) {
-    if(strcmp((char*)key1, (char*)key2) < 0) return 1;
-    return 0;
-}
-
-
-  función para comparar claves de tipo int
-  retorna 1 si son iguales
-
-int is_equal_int(void * key1, void * key2) {
-    if(*(int*)key1 == *(int*)key2) return 1;
-    return 0;
-}
-
-
-  función para comparar claves de tipo int
-  retorna 1 si son key1<key2
-
-int lower_than_int(void * key1, void * key2) {
-    if(*(int*)key1 < *(int*)key2) return 1;
-    return 0;
-}*/
-
 void initMenu() {
     HashMap* productos = createMap(100);
     HashMap* productosPorMarca = createMap(100);
     HashMap* productosPorTipo = createMap(100);
-    // Cola para el carrito
-    // setSortFunction(productos, lower_than_string);
-    // setSortFunction(productosPorMarca, lower_than_string);
-    // setSortFunction(productosPorTipo, lower_than_string);
+
+    HashMap* carritos = createMap(20);
     
     int choice;
     char buscar[128];
@@ -111,6 +73,7 @@ void initMenu() {
                 mostrarProductos(productos);
                 break;
             case 8:
+                agregarAlCarritoUI(carritos, productos);
                 break;
             case 9: 
                 break;
@@ -136,4 +99,33 @@ int getChoice() {
             printf("La opcion que ingresaste no es valida.");
         }
     }
+}
+
+void agregarAlCarritoUI(HashMap* carritos, HashMap* productos) {
+    char nombreCarrito[128];
+    char nombre[128];
+    char marca[128];
+    char cantidadInput[10];
+    int cantidad;
+
+    printf("Ingrese el nombre del carrito\n");
+    fgets(nombreCarrito, sizeof(nombreCarrito), stdin);
+    strtok(nombreCarrito, "\n");
+
+    printf("Ingrese el nombre del producto\n");
+    fgets(nombre, sizeof(nombre), stdin);
+    strtok(nombre, "\n");
+
+    printf("Ingrese la marca del producto\n");
+    fgets(marca, sizeof(marca), stdin);
+    strtok(marca, "\n");
+
+    printf("Ingrese cantidad de productos a anadir al carrito.\n");
+    fgets(cantidadInput, sizeof(cantidadInput), stdin);
+    strtok(cantidadInput, "\n");
+
+    if (isdigit(*cantidadInput))
+        cantidad = atoi(cantidadInput);
+
+    agregarAlCarrito(carritos, productos, nombre, marca, cantidad, nombreCarrito);
 }

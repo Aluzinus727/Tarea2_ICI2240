@@ -21,7 +21,7 @@ void agregarProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pr
 void* crearProducto(char* nombre, char* marca, char* tipo, char* cantidad, char* precio);
 
 /*
-    Funciones para buscar
+    Funcion para buscar
 */
 
 void buscarPorCriterio(HashMap* criterio, char* key);
@@ -29,3 +29,11 @@ void buscarPorCriterio(HashMap* criterio, char* key);
 void anadirProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo);
 
 void mostrarProductos(HashMap* productos);
+
+/*  
+    Funciones del carrito de compra
+*/
+
+void* crearCarrito(char* nombreCarrito);
+
+void agregarAlCarrito(HashMap* carritos, HashMap* productos, char* nombre, char* marca, int cantidad, char* nombreCarrito);

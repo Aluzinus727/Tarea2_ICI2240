@@ -16,7 +16,7 @@ struct Producto {
 
 struct Carrito {
     char* nombre;
-    int total;
+    void* productos;
 };
 
 void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombreArchivo) {
@@ -226,4 +226,45 @@ void mostrarProductos(HashMap* productos)
 
         productoPair = nextMap(productos);
     }
+}
+
+void* crearCarrito(char* nombreCarrito) {
+    Carrito* carrito = malloc(sizeof(Carrito));
+
+    carrito->nombre = malloc(strlen(nombreCarrito));
+    carrito->productos = create_list();
+
+    return carrito;
+}
+
+void agregarAlCarrito(HashMap* carritos, HashMap* productos, char* nombre, char* marca, int cantidad, char* nombreCarrito) {
+    Pair* carritoPair = searchMap(carritos, nombreCarrito);
+    int encontrado = 0;
+
+    if (carritoPair == NULL) {
+        Carrito* carrito = crearCarrito(nombreCarrito);
+        insertMap(carritos, nombreCarrito, carrito);
+        carritoPair = searchMap(carritos, nombreCarrito);
+    }
+
+    Pair* productoPair = searchMap(productos, nombre);
+
+    if (productoPair != NULL) {
+        Producto* productoAux = first(productoPair->value);
+
+        while(productoAux != NULL) {
+            if (strcmp(productoAux->marca, marca) == 0) {
+                Carrito* carritoAux = carritoPair->value; 
+                encontrado = 1;
+
+                for (int i = 0; i < cantidad; i++)
+                    push_back(carritoAux->productos, productoAux);
+                    
+                break;
+            }
+        }
+    }
+
+    if (encontrado == 0) 
+        printf("No existe ningun producto con el nombre especificado");
 }
