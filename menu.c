@@ -72,7 +72,7 @@ void initMenu() {
                 buscarPorCriterio(productosPorMarca, buscar);
                 break;
             case 6:
-                printf("Ingrese el nombre del producto que desea buscar (REVISAR LA BUSQUEDA POR NOMBRE DE PRODUCTO)\n");
+                printf("Ingrese el nombre del producto que desea buscar\n");
                 fgets(buscar, sizeof(buscar), stdin);
                 strtok(buscar, "\n");
 
@@ -86,6 +86,7 @@ void initMenu() {
                 agregarAlCarritoUI(carritos, productos);
                 break;
             case 9: 
+                concretarCompra(carritos);
                 break;
         }
     };  
@@ -138,4 +139,19 @@ void agregarAlCarritoUI(HashMap* carritos, HashMap* productos) {
         cantidad = atoi(cantidadInput);
 
     agregarAlCarrito(carritos, productos, nombre, marca, cantidad, nombreCarrito);
+}
+
+void concretarCompra(HashMap * carritos)
+{
+    char nombreCarrito[128];
+
+    printf("Estos son los carros de compra disponibles:\n");
+    mostrarNombresCarritos(carritos);
+
+    printf("Elija un carro de compra\n");
+    fgets(nombreCarrito, sizeof(nombreCarrito), stdin);
+    strtok(nombreCarrito, "\n"); 
+
+    mostrarInfoCarrito(nombreCarrito, carritos);
+
 }

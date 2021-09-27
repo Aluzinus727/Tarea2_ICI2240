@@ -5,7 +5,6 @@
 #include "headers/funciones.h"
 #include "headers/list.h"
 
-
 struct Producto {
     char* nombre;
     char* marca;
@@ -18,6 +17,13 @@ struct Carrito {
     char* nombre;
     void* productos;
 };
+
+void aMinuscula(char *cadena)
+{
+    size_t largo = strlen(cadena);
+    for (int i = 0 ; i < largo ; i++)
+        cadena[i] = tolower(cadena[i]);
+}
 
 void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* productosPorTipo, char* nombreArchivo) {
     FILE *fp = fopen (nombreArchivo, "r");
@@ -37,13 +43,12 @@ void importarProductos(HashMap* productos, HashMap* productosPorMarca, HashMap* 
             cantidad = get_csv_field(linea, 3);
             precio = get_csv_field(linea, 4);
 
-            printf("%s %s %s %s %s\n", nombre, marca, tipo, cantidad, precio);
 
             agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
         }
-
+        printf("IMPORTACION EXITOSA!\n");
     } else 
-        printf("No se pudo encontrar ningun archico con ese nombre");
+        printf("No se pudo encontrar ningun archico con ese nombre\n");
 }
 
 
@@ -148,7 +153,9 @@ void* crearProducto(char* nombre, char* marca, char* tipo, char* stock, char* pr
     producto->nombre = malloc(sizeof(char) * strlen(nombre) + 1);
     producto->marca = malloc(sizeof(char) * strlen(marca) + 1);
     producto->tipo = malloc(sizeof(char) * strlen(tipo) + 1);
-
+    aMinuscula(nombre);
+    aMinuscula(marca);
+    aMinuscula(tipo);
     strcpy(producto->nombre, nombre);
     strcpy(producto->marca, marca);
     strcpy(producto->tipo, tipo);
@@ -160,6 +167,7 @@ void* crearProducto(char* nombre, char* marca, char* tipo, char* stock, char* pr
 }
 
 void buscarPorCriterio(HashMap* criterio, char* key) {
+    aMinuscula(key);
     Pair* criterioPair = searchMap(criterio, key);
 
     if (criterioPair == NULL) {
@@ -167,7 +175,7 @@ void buscarPorCriterio(HashMap* criterio, char* key) {
         return;
     }
     
-    printf("%d\n", size(criterioPair->value));
+
     Producto* auxProducto = first(criterioPair->value);
     int cont = 1;
 
@@ -208,6 +216,8 @@ void anadirProducto(HashMap* productos, HashMap* productosPorMarca, HashMap* pro
     strtok(precio, "\n");
 
     agregarProducto(productos, productosPorMarca, productosPorTipo, nombre, marca, tipo, cantidad, precio);
+
+    printf("PRODUCTO AGREGADO.\n");
 }
 
 void mostrarProductos(HashMap* productos)
@@ -234,6 +244,7 @@ void* crearCarrito(char* nombreCarrito) {
     Carrito* carrito = malloc(sizeof(Carrito));
 
     carrito->nombre = malloc(strlen(nombreCarrito));
+    strcpy(carrito->nombre, nombreCarrito);
     carrito->productos = create_list();
 
     return carrito;
@@ -268,7 +279,9 @@ void agregarAlCarrito(HashMap* carritos, HashMap* productos, char* nombre, char*
     }
 
     if (encontrado == 0) 
-        printf("No existe ningun producto con el nombre especificado");
+        printf("No existe ningun producto con el nombre especificado\n");
+    else   
+        printf("AGREGADO AL CARRITO.\n");
 }
 
 void exportarProductos(HashMap* productos, char* archivo)
@@ -290,8 +303,39 @@ void exportarProductos(HashMap* productos, char* archivo)
 
         productoPair = nextMap(productos);
     }
-    printf("Exportacion exitosa!\n");
+    printf("EXPORTACION EXITOSA!\n");
     fclose(datos);
 
 
+}
+
+void mostrarNombresCarritos(HashMap* carritos)
+{
+    Pair* carritoPair = firstMap(carritos);
+    int cont = 1;
+
+    while (carritoPair != NULL)
+    {
+        Carrito* carritoAux = carritoPair->value;
+
+        printf("%s \n", carritoAux->nombre);
+
+        carritoPair = nextMap(carritos);
+    }
+}
+
+void mostrarInfoCarrito(char* nombreCarrito, HashMap* carritos)
+{
+    /*
+    Pair* carritoPair = searchMap(carritos, nombreCarrito);
+
+    if (carritoPair == NULL)
+        printf("entre aca\n");
+    else {
+        Carrito* carritoAux = carritoPair->value;
+        printf("Pase del carrito \n");
+    }
+    
+    // no imprime bn el 2do print. */
+    
 }
